@@ -1,8 +1,12 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_blue/flutter_blue.dart';
+import 'package:tutorial/main.dart';
 import 'BPDisplay.dart';
-
+FlutterBlue flutterBlue = FlutterBlue.instance;
+var device=flutterBlue.connectedDevices;
 Values val=Values();
+Bluetooth h=Bluetooth();
 class Calib extends StatefulWidget {
   const Calib({Key? key}) : super(key: key);
 
@@ -23,9 +27,8 @@ Widget datacard(context){
         child: Column(
           children: <Widget>[TextField(
             onChanged: (text){
-
-              val.name=text;
-              print(val.name);
+                val.name=text;
+                 print(val.name);// debug statement
 
             },
                 style: TextStyle(color: Colors.black),
@@ -41,6 +44,11 @@ Widget datacard(context){
           )),
             SizedBox(height: 20),
             TextField(
+              onChanged: (text){
+                val.syscalib=text;
+                h.send_sys_data(int.parse(val.syscalib));
+                print(int.parse(val.syscalib));
+              },
                 style: TextStyle(color: Colors.black),
                  cursorColor: Colors.green,
                   decoration:  InputDecoration(
@@ -54,6 +62,11 @@ Widget datacard(context){
               )),
               SizedBox(height: 20),
             TextField(
+              onChanged: (text){
+                val.diacalib=text;
+                h.send_dia_data(int.parse(val.diacalib));
+                print(int.parse(val.diacalib));
+              },
               cursorColor: Colors.green,
               style: TextStyle(color: Colors.black),
               decoration:  InputDecoration(
@@ -71,6 +84,8 @@ Widget datacard(context){
             ),
             SizedBox(height: 20),
           ElevatedButton(onPressed: (){
+            h.read_sys_value();
+            //h.read_dia_value();
             Navigator.pushNamed(context, '/BP');
 
           },  style:ElevatedButton.styleFrom(backgroundColor: Colors.green,
