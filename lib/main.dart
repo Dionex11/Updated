@@ -7,7 +7,7 @@ import 'package:tutorial/BPDisplay.dart';
 import 'package:tutorial/Splash.dart';
 import 'calibration.dart';
 import 'About.dart';
-
+import 'Setup.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,21 +19,21 @@ void main() {
         '/': (context) => const Splashscreen(),
         '/Home':(context) => Home(),
         '/calib':(context) =>const Calib(),
-        '/BP':(context)=>const Bpdisplay(),
+        '/BP':(context)=>Bpdisplay(),
         '/About':(context)=>const About(),
+        '/setup':(context)=>const Setup(),
       }));
 }
 
-
+var cid;
 var Characteristics;
 Values v=Values();
 class Bluetooth{
-
   var syscal;
   var diacal;
-  Stream<List<int>> stream=Stream.empty();
-  final _controller=StreamController<int>();
-  Stream<int> get stream=>_controller.stream;
+
+  Stream<List<int>>  stream=Stream.empty();
+
 
   send_sys_data(int val)
   async {
@@ -57,17 +57,19 @@ class Bluetooth{
 
   read_sys_value()
   async{
+    //reconnect();
+
     for(BluetoothCharacteristic c in Characteristics) {
+      print(c.uuid);
       if(c.uuid.toString()=="56268214-4c39-4d5e-a74d-186b335c96b5")
         {
-           var a=await c.read();
-           print(a);
-           syscal=a[0];
+
+             c.setNotifyValue(!c.isNotifying);
+             stream.asBroadcastStream();
+             stream=c.value ;
+
            //_controller.sink.add(syscal);
-           v.get_sys=syscal;
-           await h.read_dia_value();
-           final myStream= h.read_sys_value().stream;
-           final sub= myStream.listen((data)=>print(data));
+           //await h.read_dia_value();
 
         }
 
@@ -76,11 +78,9 @@ class Bluetooth{
     async {
       for (BluetoothCharacteristic c in Characteristics) {
         if (c.uuid.toString() == "2e8bd505-da2e-4285-8979-5c85fc2c2520") {
-          var a = await c.read();
-          print(a[0]);
-          diacal = a[0];
-          print(diacal);
-          v.get_dia = diacal;
+          await c.setNotifyValue(!c.isNotifying);
+          diacal=c.value;
+
 
         }
       }
@@ -90,6 +90,27 @@ class Bluetooth{
 
 FlutterBlue flutterBlue = FlutterBlue.instance;
 List<BluetoothDevice> devices= <BluetoothDevice>[];
+reconnect() async {
+
+    for (BluetoothDevice device  in devices) {
+      print(device.id);
+      print('${device.name} found! rssi:');
+      print(device.disconnect());
+      if(device.id.toString()==cid){
+        await device.connect();
+        print(device.state);
+        print("reconnect sucessfull ())()()()()(");
+        List<BluetoothService> s=await device.discoverServices();
+        for(BluetoothService i in s){
+          Characteristics=i.characteristics;
+          print(i.characteristics);
+        }
+      }
+      for(BluetoothCharacteristic c in Characteristics){if(c.uuid.toString()=="56268214-4c39-4d5e-a74d-186b335c96b5"){c.setNotifyValue(!c.isNotifying);print("done");}}
+      }
+
+    }
+
 
 class  Home extends StatefulWidget {
 
@@ -151,12 +172,13 @@ class _HomeState extends State<Home> {
                 padding: const EdgeInsets.all(8),
                 child: ElevatedButton(
                   onPressed: () async {
-                  await  device.connect();
+                 await device.connect();
+                    cid=device.id.toString();
+                    Navigator.pushNamed(context, '/calib');
                     List<BluetoothService> services = await device.discoverServices();
                     services.forEach((service) {
                     Characteristics = service.characteristics;
-                    Navigator.pushNamed(context, '/calib');
-                    Bpdisplay(device: device,);
+                    //Navigator.pushNamed(context, '/calib');
                   });
 
 

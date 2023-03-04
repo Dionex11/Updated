@@ -95,7 +95,7 @@ Widget datacard(context){
               elevation: 10,
 
           ),
-              child: Text('Get BP Values',style: TextStyle(letterSpacing: 2),))],
+              child: Text('Calibrate',style: TextStyle(letterSpacing: 2),))],
         ),
       ),
     ),
