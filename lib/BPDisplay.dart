@@ -76,10 +76,9 @@ class  _BpdisplayState extends State<Bpdisplay> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Patient Data',style: TextStyle(color: Colors.white,letterSpacing: 1.0),),
-        backgroundColor: Colors.blue[900],
-        shadowColor: Colors.lightBlue[400],
+        backgroundColor: Color.fromRGBO(141, 2, 31, 50),
       ),
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.black12,
 
       body:StreamBuilder(
         stream: h.stream,
@@ -97,65 +96,100 @@ class  _BpdisplayState extends State<Bpdisplay> {
               var i =snapshot.data;
               List<String> d=string_parser(i);
               return Card(
+                //shadowColor: Colors.green,
+                elevation: 1000,
+                surfaceTintColor: Colors.red,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+                color: Color.fromRGBO(41, 1, 51, 100),
                 margin: EdgeInsets.fromLTRB(10, 80, 10, 100),
                 child: Column(children:[Row(
                   children:[Card(
-                    color: Colors.red,
+                    color: Colors.cyan,
+                    margin: EdgeInsets.fromLTRB(8, 100, 8, 0),
                     child: Container(
                       margin: EdgeInsets.all(10),
-                      color:Colors.yellowAccent,
+                      color:Colors.black12,
                       width: 150.0,
                       height: 150.0,
                       child: Center(
-                        child: Text(
-                            d[0],
-                            style: const TextStyle(color: Colors.red, fontSize: 40)),
+                        child: RichText(
+                          text: TextSpan(
+                            style: DefaultTextStyle.of(context).style,
+                            children: <TextSpan>[
+                              TextSpan(text: d[0], style: TextStyle(fontWeight: FontWeight.bold,fontSize:50)),
+                              TextSpan(text: 'mmHg', style: TextStyle(fontWeight: FontWeight.bold,fontSize:18)),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
 
                   Card(
+                    color:Colors.yellowAccent,
+                  margin: EdgeInsets.fromLTRB(0, 100, 0, 0),
                     child: Container(
                       margin: EdgeInsets.all(10),
-                      color:Colors.yellowAccent,
+                      color:Colors.black12,
                       width: 150.0,
                       height: 150.0,
                       child: Center(
-                        child: Text(
-                            d[1],
-                            style: const TextStyle(color: Colors.red, fontSize: 40)),
+                        child: RichText(
+                          text: TextSpan(
+                            style: DefaultTextStyle.of(context).style,
+                            children: <TextSpan>[
+                              TextSpan(text: d[1], style: TextStyle(fontWeight: FontWeight.bold,fontSize:50)),
+                              TextSpan(text: 'mmHg', style: TextStyle(fontWeight: FontWeight.bold,fontSize:18)),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ]),
                   Row(
                     children:[ Card(
+                      color:Colors.redAccent,
+                      margin: EdgeInsets.fromLTRB(8, 0, 5, 0),
                       child: Container(
                         margin: EdgeInsets.all(10),
-                        color:Colors.yellowAccent,
+                        color:Colors.black12,
                         width: 150.0,
                         height: 150.0,
                         child: Center(
-                          child: Text(
-                              d[2],
-                              style: const TextStyle(color: Colors.red, fontSize: 40)),
+                          child: RichText(
+                            text: TextSpan(
+                              style: DefaultTextStyle.of(context).style,
+                              children: <TextSpan>[
+                                TextSpan(text: d[2], style: TextStyle(fontWeight: FontWeight.bold,fontSize:50)),
+                                TextSpan(text: 'bpm', style: TextStyle(fontWeight: FontWeight.bold,fontSize:18)),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ),
 
                   Card(
+                    color: Colors.greenAccent,
                     child: Container(
                       margin: EdgeInsets.all(10),
-                      color:Colors.yellowAccent,
+                      color:Colors.black12,
                       width: 150.0,
                       height: 150.0,
                       child: Center(
-                        child: Text(
-                            d[3],
-                            style: const TextStyle(color: Colors.red, fontSize: 40)),
+                        child: RichText(
+                        text: TextSpan(
+                        style: DefaultTextStyle.of(context).style,
+                        children: <TextSpan>[
+                        TextSpan(text: d[3], style: TextStyle(fontWeight: FontWeight.bold,fontSize:50)),
+                        TextSpan(text: '%', style: TextStyle(fontWeight: FontWeight.bold,fontSize:18)),
+                        ],
+                        ),
+                        ),),
                       ),
                     ),
-                  )]),
+                  ]),
                 ]),
               );
             } else {
